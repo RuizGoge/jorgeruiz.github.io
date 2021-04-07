@@ -3,10 +3,8 @@ let resetButton = document.querySelector("#reset");
 let newNote = document.querySelector('#save');
 let deleted = document.querySelector('#delete');
 let act = document.querySelector('#update');
-
 let resetAll = () => { if (confirm("Estas seguro de borrar todo?")) { localStorage.clear(); } return location.reload(); }
 resetButton.addEventListener('click', resetAll);
-
 let saveNote = () => {
     let title = document.getElementById("title").value;
     let note = document.getElementById("note").value;
@@ -16,11 +14,8 @@ let saveNote = () => {
     } else {
         alert("Por favor, escribir en los dos campos");
     }
-
     return location.reload();
 }
-
-
 if (localStorage.length > 0) {
     for (let i = 0; i < localStorage.length; i++) {
         let locate = localStorage.key(i);
@@ -28,7 +23,6 @@ if (localStorage.length > 0) {
         document.write(`<h3>${i + 1}. ${locate}</h3> <i>${note}</i>`);
     }
 } else { document.write(`<i>No hay notas que mostrar</i>`); }
-
 let deleteOne = () => {
     let notesArray = [];
     if (localStorage.length === 0) {
@@ -58,9 +52,7 @@ let deleteOne = () => {
     } else {
         return location.reload();
     }
-
 }
-
 let updateNote = () => {
     let notesArray = [];
     if (localStorage.length === 0) {
@@ -90,12 +82,7 @@ let updateNote = () => {
     } else {
         return location.reload();
     }
-
-
-
 }
-
-
 act.addEventListener('click', updateNote);
 deleted.addEventListener('click', deleteOne);
 newNote.addEventListener('click', saveNote);
