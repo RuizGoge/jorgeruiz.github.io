@@ -1,10 +1,9 @@
-const resetButton = document.querySelector("#reset");
+const resetButton = document.querySelector('#reset');
 const deleteNote = document.querySelector('#delete');
 const updateNote = document.querySelector('#update');
 const newNote = document.querySelector('#save');
 //Variables Inicializadas (camelCase)
 let notes = [];
-let JsonNote = [];
 //For showForSelect();
 let arrayInfo = [];
 let selected;
@@ -17,19 +16,19 @@ const save = array => {
 const saveNote = () => {
     const TITLE_NOTE = document.getElementById('title').value;
     const NOTE = document.getElementById('note').value;
-    if (title && note) {
+    if (!(TITLE_NOTE && NOTE)) {
+        alert('Write in the two fields');
+    } else {
         notes.push({ title: TITLE_NOTE, note: NOTE });
         save(notes);
-    } else {
-        alert("Write in the two fields");
     }
 }
 const showNotes = () => {
     if (!localStorage.length) {
         notes = [];
     } else {
-        JsonNote = localStorage.getItem('notes');
-        notes = JSON.parse(JsonNote);
+        const JSON_NOTE = localStorage.getItem('notes');
+        notes = JSON.parse(JSON_NOTE);
     }
     if (!notes.length) {
         document.write(`<i>No notes to show</i>`);
@@ -44,50 +43,36 @@ const showForSelect = array => {
         arrayInfo.push(`${i + 1}. ${e.title}`);
     });
     if (localStorage.length === 0) {
-        alert("no Records");
+        alert('no Records');
     } else {
-        selected = Number(prompt(`${arrayInfo.join("\n")}`));
+        selected = Number(prompt(`${arrayInfo.join('\n')}`));
     }
 }
-
 const deleteOne = () => {
     arrayInfo = [];
     showForSelect(notes);
-
-    if (selected) {
-        if (selected <= arrayInfo.length) {
-            notes.splice(selected - 1, 1);
-            save(notes);
-        } else {
-            alert(`Record N°${selected} , doesn't exist, please check.`);
-            deleteOne();
-        }
+    if (!(selected <= arrayInfo.length)) {
+        alert(`Record N°${selected} , doesn't exist, please check.`);
+        deleteOne();
+    } else if (selected) {
+        notes.splice(selected - 1, 1);
+        save(notes);
     }
 }
-
 const updateOne = () => {
     arrayInfo = [];
     showForSelect(notes);
-    if (selected) {
-        if (selected <= arrayInfo.length) {
-            const TITLE_NOTE = notes[selected - 1].title;
-            const NOTE = prompt("Write the new note");
-            notes.splice(selected - 1, 1, { title: TITLE_NOTE, note: NOTE });
-            save(notes);
-        } else {
-            alert(`Record N°${selected} , doesn't exist, please check.`);
-            updateOne();
-        }
+    if (!(selected <= arrayInfo.length)) {
+        alert(`Record N°${selected} , doesn't exist, please check.`);
+        updateOne();
+    } else if (selected) {
+        const TITLE_NOTE = notes[selected - 1].title;
+        const NOTE = prompt('Write the new note');
+        (!NOTE) ? alert('Empty field') : notes.splice(selected - 1, 1, { title: TITLE_NOTE, note: NOTE });
+        save(notes)
     }
 }
-resetButton.addEventListener('click', () => {
-    if (confirm("Are you shure?")) {
-        localStorage.clear();
-        notes = [];
-        JsonNote = [];
-        location.reload();
-    }
-});
+resetButton.addEventListener('click', () => {if (confirm('Are you sure?'))localStorage.clear(),location.reload();});
 newNote.addEventListener('click', saveNote);
 deleteNote.addEventListener('click', deleteOne);
 updateNote.addEventListener('click', updateOne);
