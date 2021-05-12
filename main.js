@@ -1,11 +1,11 @@
-let resetButton = document.querySelector("#reset");
-let deleted = document.querySelector('#delete');
-let upd = document.querySelector('#update');
-let newNote = document.querySelector('#save');
-//Variables Inicializadas
+const resetButton = document.querySelector("#reset");
+const deleteNote = document.querySelector('#delete');
+const updateNote = document.querySelector('#update');
+const newNote = document.querySelector('#save');
+//Variables Inicializadas (camelCase)
 let notes = [];
 let JsonNote = [];
-//For showForSelect
+//For showForSelect();
 let arrayInfo = [];
 let selected;
 //-------------------->
@@ -15,35 +15,33 @@ const save = array => {
     location.reload();
 }
 const saveNote = () => {
-    const title = document.getElementById('title').value;
-    const note = document.getElementById('note').value;
+    const TITLE_NOTE = document.getElementById('title').value;
+    const NOTE = document.getElementById('note').value;
     if (title && note) {
-        notes.push({ title: title, note: note });
+        notes.push({ title: TITLE_NOTE, note: NOTE });
         save(notes);
     } else {
         alert("Write in the two fields");
     }
 }
 const showNotes = () => {
-    if (localStorage) {
+    if (!localStorage.length) {
+        notes = [];
+    } else {
         JsonNote = localStorage.getItem('notes');
         notes = JSON.parse(JsonNote);
     }
     if (!notes.length) {
         document.write(`<i>No notes to show</i>`);
     } else {
-        let i = 1;
-        notes.forEach(e => {
-            document.write(`<h4>${i}. ${e.title}</h4><i> ${e.note} </i>`);
-            i++;
+        notes.forEach((e, i) => {
+            document.write(`<h4>${i + 1}. ${e.title}</h4><i> ${e.note} </i>`);
         });
     }
 }
 const showForSelect = array => {
-    let i = 1;
-    array.forEach(e => {
-        arrayInfo.push(`${i}. ${e.title}`);
-        i++;
+    array.forEach((e, i) => {
+        arrayInfo.push(`${i + 1}. ${e.title}`);
     });
     if (localStorage.length === 0) {
         alert("no Records");
@@ -51,9 +49,11 @@ const showForSelect = array => {
         selected = Number(prompt(`${arrayInfo.join("\n")}`));
     }
 }
+
 const deleteOne = () => {
     arrayInfo = [];
     showForSelect(notes);
+
     if (selected) {
         if (selected <= arrayInfo.length) {
             notes.splice(selected - 1, 1);
@@ -63,18 +63,16 @@ const deleteOne = () => {
             deleteOne();
         }
     }
-    
 }
+
 const updateOne = () => {
     arrayInfo = [];
     showForSelect(notes);
-    let title;
-    let note;
     if (selected) {
         if (selected <= arrayInfo.length) {
-            title = notes[selected - 1].title;
-            note = prompt("Write the new note");
-            notes.splice(selected - 1, 1, { title: title, note: note });
+            const TITLE_NOTE = notes[selected - 1].title;
+            const NOTE = prompt("Write the new note");
+            notes.splice(selected - 1, 1, { title: TITLE_NOTE, note: NOTE });
             save(notes);
         } else {
             alert(`Record N°${selected} , doesn't exist, please check.`);
@@ -82,7 +80,6 @@ const updateOne = () => {
         }
     }
 }
-
 resetButton.addEventListener('click', () => {
     if (confirm("Are you shure?")) {
         localStorage.clear();
@@ -92,6 +89,6 @@ resetButton.addEventListener('click', () => {
     }
 });
 newNote.addEventListener('click', saveNote);
-deleted.addEventListener('click', deleteOne);
-upd.addEventListener('click', updateOne);
+deleteNote.addEventListener('click', deleteOne);
+updateNote.addEventListener('click', updateOne);
 showNotes();
